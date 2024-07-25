@@ -20,4 +20,8 @@ public class Venta {
     private LocalDateTime fecha;
     private Float monto;
 
+    @ManyToOne
+    @JoinColumn(name = "moneda_id")
+    private Moneda moneda;
+
 }

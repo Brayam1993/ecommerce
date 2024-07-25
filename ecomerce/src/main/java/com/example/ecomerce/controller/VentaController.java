@@ -28,6 +28,13 @@ public class VentaController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/{ventaId}/{monedaId}")
+    public ResponseEntity<Venta> obtenerVentaPorIdMoneda(@PathVariable Long ventaId, @PathVariable Long monedaId ){
+        return  ventaService.obtenerVentaPorIdTipoMoneda(ventaId,monedaId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/cliente/{clienteId}")
     public List<Venta> obtenerVentasPorClienteId(@PathVariable Long clienteId){
         return ventaService.obtenerVentasPorClienteId(clienteId);

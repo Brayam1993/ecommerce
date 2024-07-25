@@ -1,8 +1,10 @@
 package com.example.ecomerce.service;
 
 import com.example.ecomerce.entity.Articulo_x_Venta;
+import com.example.ecomerce.entity.Moneda;
 import com.example.ecomerce.entity.Producto;
 import com.example.ecomerce.repository.Articulo_x_VentaRepository;
+import com.example.ecomerce.repository.MonedaRepository;
 import com.example.ecomerce.repository.ProductoRepository;
 import com.example.ecomerce.repository.VentaRepository;
 import jakarta.transaction.Transactional;
@@ -23,7 +25,12 @@ public class VentaService {
     private Articulo_x_VentaRepository articuloRepository;
 
     @Autowired
+    private MonedaRepository monedaRepository;
+
+    @Autowired
     private ProductoRepository productoRepository;
+
+    @Autowired ConversionService conversionService;
 
     public List<Venta> obtenerTodasLasVentas() {
         return ventaRepository.findAll();
@@ -31,6 +38,33 @@ public class VentaService {
 
     public Optional<Venta> obtenerVentaPorId(Long id) {
         return ventaRepository.findById(id);
+    }
+
+    public Optional<Venta> obtenerVentaPorIdTipoMoneda(Long ventaId, Long monedaId){
+        Optional<Venta> ventaOpt = ventaRepository.findById(ventaId);
+        Optional<Moneda> monedaOpt = monedaRepository.findById(monedaId);
+
+        if(ventaOpt.isPresent() && monedaOpt.isPresent()){
+            Venta venta = ventaOpt.get();
+            Moneda moneda = monedaOpt.get();
+
+            // Calcula el precio en la moneda solicitada
+            float montoComvertido = conversionService.obtenerValorComvertidoAmonedaSolicitada(venta.getMonto(),moneda.getTasaCambio());
+
+            // Crea una copia de la venta para no modificar la original
+            Venta ventaComvertida = new Venta();
+
+            ventaComvertida.setVenta_id(venta.getVenta_id());
+            ventaComvertida.setCliente(venta.getCliente());
+            ventaComvertida.setFecha(venta.getFecha());
+            ventaComvertida.setMonto(montoComvertido);
+            ventaComvertida.setMoneda(moneda);
+
+            return Optional.of(ventaComvertida);
+
+        } else {
+            return Optional.empty();
+        }
     }
 
     public List<Venta> obtenerVentasPorClienteId(Long clienteId) {
