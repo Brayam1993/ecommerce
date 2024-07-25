@@ -32,6 +32,13 @@ public class ProductoController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/{id}/{monedaId}")
+    public ResponseEntity<Producto> obtenerProductoPorIdTipoMoneda(@PathVariable Long id, @PathVariable Long monedaId){
+        return productoService.obtenerProductoPorIdTipoMoneda(id,monedaId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @PutMapping("/{id}")
     public Producto actualizarProducto(@PathVariable Long id, @RequestBody Producto producto){
         return productoService.actualizarProducto(id,producto);
