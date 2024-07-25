@@ -15,6 +15,11 @@ public class Producto {
     private String nombre;
     private String descripcion;
     private String foto;
-    private Float precio;
     private Integer cantidad;
+    private Float precioBase;
+
+    @ManyToOne
+    @JoinColumn(name = "moneda_base_id")
+    private Moneda monedaBase;
+
 }
