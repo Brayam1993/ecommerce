@@ -1,9 +1,14 @@
 package com.example.ecomerce.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+
 @Entity
 @Table(name = "paises")
 public class Pais {

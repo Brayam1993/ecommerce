@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: Local
+    active: Test
 ---
 spring:
   config:
@@ -33,3 +33,14 @@ spring:
     show-sql: 'true'
     hibernate:
       ddl-auto: none
+---
+spring:
+  config:
+    activate:
+      on-profile: Test
+  datasource:
+    username: root
+    url: jdbc:h2:mem:testdb
+    password: root
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
