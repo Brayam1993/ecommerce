@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.Optional;
 
 @DataJpaTest
 public class PaisRepositoryTest {
@@ -74,8 +75,27 @@ public class PaisRepositoryTest {
     void testActualizarPais(){
         // given
         paisRepository.save(pais);
-
         // when
+        Pais paisGuardado = paisRepository.findById(pais.getPais_id()).get();
+        paisGuardado.setNombre("Colombia");
+        paisGuardado.setDominio("CO");
+        // then
+        Pais paisActualizado = paisRepository.save(paisGuardado);
+        assertThat(paisActualizado.getNombre()).isEqualTo("Colombia");
+        assertThat(paisActualizado.getDominio()).isEqualTo("CO");
+
+    }
+
+    @DisplayName("Test para eliminar un pais")
+    @Test
+    void testEliminarPais(){
+        // given
+        paisRepository.save(pais);
+        // when
+        paisRepository.deleteById(pais.getPais_id());
+        Optional<Pais> paisOptional = paisRepository.findById(pais.getPais_id());
+        // then
+        assertThat(paisOptional).isEmpty();
     }
 
 }
